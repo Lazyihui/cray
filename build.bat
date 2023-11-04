@@ -3,4 +3,3 @@ gcc .\build\main.o  .\lib\raylib.dll -o .\bin\main.exe
 
 copy .\lib\raylib.dll .\bin\raylib.dll 
 
-bin\main.exe

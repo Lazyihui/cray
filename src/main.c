@@ -1,114 +1,197 @@
 #include "../include/raylib.h"
 #include "../include/raymath.h"
 #include "stdio.h"
-// #include "RoleEntity.h"
-// #include "RoleEntity_Inpupt.h"
-// #include "RoleEntity_Move.h"
-// #include "stdlib.h"
-// #include "time.h"
-// #include "bool.h"
+#include "RoleEntity.h"
+#include "RoleEntity_Inpupt.h"
+#include "RoleEntity_Move.h"
+#include "stdlib.h"
+#include "math.h"
+#include "time.h"
+#include "RockEntity.h"
+#include "common.h"
+#include "HookEntity.h"
 #define WIDTH 500 // 定义一个常量
 #define HEIGHT 500
-
-int GetIndex(int indexwidth, int x, int y) {
-    return x + indexwidth * y;
-}
-*arr   or  arr[]   数组
-
-void DrawArr(int *arr, int width, int height) {
-    for (int x = 0; x < width; x += 1) {
-        for (int y = 0; y < height; y += 1) {
-            int index = GetIndex(width, x, y);
-            if (arr[index] == 0) {
-                DrawPixel(x, y, RED);
-            } else if (arr[index] == 1) {
-                DrawPixel(x, y, YELLOW);
-            } else if (arr[index] == 2) {
-                DrawPixel(x, y, BLUE);
-            }
-        }
-    }
-    int index = 0;
-    int status = 0;
-}
+#define rockcount 10
 
 
-void DrawArr3(int *arr, int widthx, int heighty,int starty) {
-    for (int x = 0; x < widthx; x += 5) {
-        for (int y = starty; y < heighty; y += 0) {
-            int index = GetIndex(widthx, x, y);
 
-            if (arr[index] == 0) {
-                
-                    for (int longx = 6; longx < widthx; longx += 2) {
-                    DrawRectangle(x, y, longx, longx, GREEN);
-                    arr[index] = 1;
-                    index += 2*index-1;
-                }
-                if (index >= WIDTH * HEIGHT) {
-                    index = 0;
-                }
-            }
-        }
-    }
-}
 
-void DrawArr2(int *arr, int widthx, int heighty) {
-    for (int x = 0; x < widthx; x += 3) {
-        for (int y = 0; y < heighty; y += 1) {
-            int index = GetIndex(widthx, x, y);
-            if (arr[index] == 1) {
-                DrawPixel(x, y, PURPLE);
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 黄金旷工
 
-                arr[index] = 1;
-                index += 1;
-                if (index >= WIDTH * HEIGHT) {
-                    index = 0;
-                }
-            }
-        }
-    }
-}
 
+
+// 初始化
 int main(void) {
     InitWindow(800, 450, "cyh");
 
-    int arr[WIDTH * HEIGHT] = {0}; // 1 1 1 1 0
+    Rock rockmin = {.color = YELLOW, .heavy = 10, .pos = {.x = 0, .y = 0}, .radius = 10, .gold = 50};
+    Rock rockmid = {.color = YELLOW, .heavy = 20, .pos = {.x = 0, .y = 0}, .radius = 20, .gold = 250};
+    Rock rockmax = {.color = YELLOW, .heavy = 30, .pos = {.x = 0, .y = 0}, .radius = 30, .gold = 500};
 
-    int index = 0;
+    Rock arrrock[rockcount] = {0}; // 数组存rockcount个的圆
 
+    Rock rocktemplates[3] = {rockmin, rockmid, rockmax}; // 数组 存三种类型的圆
+
+    // myRock 这种写法多看几遍
+    int temindex; // 1111
+                  // int rockindex;
+    ////////////////////////生成金块
+
+    for (int i = 0; i < rockcount; i++) {
+        int rd = get_rand(0, 3);         // 随机得到0 1 2 这三个数
+        Rock myRock = rocktemplates[rd]; // myRock 随机得到三种不同的石头
+        int rdx = get_rand(0, 800);      // 随机的位置
+        int rdy = get_rand(180, 450);    // 随机的位置
+        myRock.pos.x = rdx;              // 把随机的位置给到myRock的位置
+        myRock.pos.y = rdy;              // 把随机的位置给到myRock的位置
+
+        arrrock[i] = myRock; // 把随机得到的石头存到arrrock[i]的数组里面 然后每个arrrock[rockcount]里面都有不一样的石头
+                             // 什么东西存下来就想到数组
+        // printf("%d\r\n", rd);
+    }
+
+    ///////////////////生成钩子
+    Hook hook = {.color = BROWN, .speed = 30, .radius = 5, .pos = {.x = 360, .y = 122}};
+    ////////////////////////
+    int rockindex;
+    Vector2 manpos;
+    manpos.x = 380; // 老头的位置
+    manpos.y = 81;
+    int hookdir = 1;  ///////////////////////????????????
+    int mansize = 40; // 因为是一个正方形
+
+    // shoot
+    float r = 60;
+    int status = 0;        // 状态   //状态这样使不同的状态可以转变
+    float hookspeed = 120; // 速度
+
+    int lastrockindex = rockcount - 1;
+    int score=0;
     SetTargetFPS(60);
 
-    int status = 0;
+    float time = 60;
+       
 
-    while (!WindowShouldClose()) {
-
+    while (!WindowShouldClose()) {/// 一针
         float dt = GetFrameTime();
 
         BeginDrawing();
+        ClearBackground(BLACK);
 
-        YELLOW
+        //////////////////time     dt= 1/fps 一秒内的dt和是一秒
+        time-=dt;
+
+        // 0 摆动 1 发出 2 勾到收回 3 没勾到
+        Vector2 hookstart;
+        hookstart.x = manpos.x + (mansize / 2);
+        hookstart.y = manpos.y + mansize;
         if (status == 0) {
-            arr[index] = 1;
-            index += 1; // index 150>=150         其实是149结束 0 1 2 3 4......149
-            if (index >= WIDTH * HEIGHT) {
+            hook.angle += hook.speed * dt * hookdir; // 角度的变化   int hookdir = 1;
+
+            hookstart.x = manpos.x + (mansize / 2);
+            hookstart.y = manpos.y + mansize; // 得到老头中心点下面的位置（钩子中的位置）
+            if (hook.angle >= 180) {
+                hookdir = -1;
+            } else if (hook.angle <= 0) {
+                hookdir = 1;
+            } // 钩子在0-180内左右摆动
+
+            ////////////////////////钩子伸长
+            // 角度不变 半径变长
+            if (IsKeyPressed(KEY_SPACE)) {
                 status = 1;
-                index = WIDTH * HEIGHT - 1; //=149
             }
-        } else if (status == 1) {
-            arr[index] = 2;
-            index -= 1; // 到0的时候重新开始；
-            if (index < 0) {
+
+            //////////////////////// 钩子左右摆动
+            hook.pos = GetOnCirlce(hookstart, hook.angle, r);
+        }
+
+        else if (status == 1) {
+            r += dt * hookspeed; // hookspeed = 100;
+            hook.pos = GetOnCirlce(hookstart, hook.angle, r);
+
+            // 检测 遍历所有数组
+            for (int i = 0; i < rockcount; i++) {
+                Rock rock = arrrock[i];
+                bool isintersect = IsCirlceInsideCircle(hook.radius, rock.radius, hook.pos, rock.pos);
+                if (isintersect) {
+                    rockindex = i; // 存
+                    status = 2;    // 勾到
+                    break;
+                }
+            }
+            if (hook.pos.x > 800 || hook.pos.x < 0 || hook.pos.y > 450) {
+                status = 3;
+            }
+
+        }
+
+        // 勾到2
+        else if (status == 2) {
+
+            Rock *rock = &arrrock[rockindex]; // 指针指向地址 *  指  &//////////!!!!/
+
+            /////////////////////////////不同重量金块不同速度
+            float rate = GetHeavyRate(rock->heavy);
+            r -= dt * hookspeed * rate;
+            // r=Clamp(r,0,r);//取
+            r = fmax(0, r); // 0和r的最大值
+            hook.pos = GetOnCirlce(hookstart, hook.angle, r);
+            rock->pos = hook.pos;//1/60 fps
+            Rock_Gold(*rock);
+
+            if (r == 0) {
+                score+=rock->gold;
+                Rock a = arrrock[lastrockindex]; // rockindex是抓到的金块
+                arrrock[lastrockindex] = arrrock[rockindex];
+                arrrock[rockindex] = a;
+                lastrockindex--;
+            }
+
+            if (r <= 0) {
                 status = 0;
-                index = 0;
+                r = 60;
+            }
+
+        }
+
+        // 没勾到3
+        else if (status == 3) {
+            r -= dt * hookspeed * 3;
+            hook.pos = GetOnCirlce(hookstart, hook.angle, r);
+
+            if (r <= 0) {
+                status = 0;
+                r = 60;
             }
         }
-        BLUE
 
-        DrawArr(arr, WIDTH, HEIGHT);
-        DrawArr3(arr,WIDTH,HEIGHT,250);
+        for (int i = 0; i <= lastrockindex; i++) {
+            Rock rock = arrrock[i];
+            Rock_Draw(&rock);
+        } // 随机画石头
+        
+       ////////////////////下一关
 
+
+//    controller
+
+
+        ///////画分数
+
+
+        Text_Int(score,20,20,20,RED);
+        Text_Int((int)time,400,10,20,YELLOW);
+
+        DrawLine(0, 122, 800, 122, GREEN);                                // 分界线
+        DrawRectangle(manpos.x, manpos.y, mansize, mansize, RED);         // 老头
+        Hook_Draw(&hook);                                                 // 钩子
+        DrawLine(hookstart.x, hookstart.y, hook.pos.x, hook.pos.y, GRAY); // 钩子的线
+        DrawFPS(50,50);
         EndDrawing();
+
     }
 
     CloseWindow();

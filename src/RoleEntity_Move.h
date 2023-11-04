@@ -1,5 +1,5 @@
-#ifndef RoleEntity_H
-#define RoleEntity_h
+#ifndef RoleEntity_Move_H
+#define RoleEntity_Move_H
 #include "../include/raylib.h"
 #include "../include/raymath.h"
 #include "RoleEntity.h"

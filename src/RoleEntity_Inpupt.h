@@ -5,6 +5,14 @@
 #include "RoleEntity.h"
 #include "stdio.h"
 
+Rectangle RectNew(float x, float y, float width, float height) {
+    return (Rectangle){.x = x, .y = y, .width = width, .height = height};
+}
+
+Rectangle RoleEntity_GetRect(RoleEntity *role) {
+    return RectNew(role->pos.x, role->pos.y, role->width, role->height);
+}
+
 void RoleEntity_Input(RoleEntity *role) {
     Vector2 moveInput = (Vector2){0}; //??
     if (IsKeyDown(KEY_W)) {
