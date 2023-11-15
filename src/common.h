@@ -5,6 +5,14 @@
 #include "../include/raymath.h"
 #define byte unsigned char
 #define string const char *
+#define rockcount 10
+#define WIDTH 500 // 定义一个常量
+#define HEIGHT 500
+const int HOOK_STATUS_WAVE = 0;
+const int HOOK_STATUS_MOVE = 1;
+const int HOOK_STATUS_HOOK = 2;
+const int HOOK_STATUS_LOST = 3;
+
 
 Vector2 Vector2New(float x, float y) {
 
