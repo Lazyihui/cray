@@ -8,6 +8,7 @@
 #define rockcount 10
 #define WIDTH 500 // 定义一个常量
 #define HEIGHT 500
+#define ROCKTEMPLATECOUNT 3
 const int HOOK_STATUS_WAVE = 0;
 const int HOOK_STATUS_MOVE = 1;
 const int HOOK_STATUS_HOOK = 2;
@@ -126,5 +127,13 @@ void Text_Int(int b, int x, int y, int size, Color color) {
 float GetHeavyRate(float heavy) {
     return -0.175f * heavy + 5.75f;
 }
+
+
+
+// void Text_charwrite(){
+//     // DrawText();
+// }
+
+
 
 #endif

@@ -7,8 +7,8 @@
 typedef struct Context {
 
     Rock arrrock[rockcount]; // 数组存rockcount个的圆
-    Rock rocktemplates[3];   // 数组 存三种类型的圆
-    int rockindex;
+    Rock rocktemplates[ROCKTEMPLATECOUNT];   // 数组 存三种类型的圆
+    int rockindex; 
     int lastrockindex;
 
     Hook hook;
@@ -17,12 +17,15 @@ typedef struct Context {
     float hookradius;
     int status;  // 状态   //状态这样使不同的状态可以转变
     int hookdir; ///////////////////////????????????
+    float hookwavetime;
+    float hookwaveduration;
 
     Vector2 manpos;
     int mansize; // 因为是一个正方形
 
     float time;
     int score;
+    
 } Context;
 
 #endif

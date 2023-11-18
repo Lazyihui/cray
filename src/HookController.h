@@ -3,11 +3,10 @@
 #include "HookEntity.h"
 #include "RockEntity.h"
 #include "Context.h"
-
-
+#include "Ease.h"
 
 void ContextInit(Context *context) {
-
+//////////////////////////////////////////////////////////////////////////////////////////////////赋值都在这里
     for (int i = 0; i < rockcount; i++) {
         context->arrrock[i] = (Rock){0};
     }
@@ -33,6 +32,8 @@ void ContextInit(Context *context) {
     context->hookradius = 60;
     context->status = 0;
     context->hookspeed = 120;
+    context->hookwavetime = 0;
+    context->hookwaveduration=3;
 
     context->score = 0;
     context->time = 60;
@@ -41,6 +42,8 @@ void ContextInit(Context *context) {
 // void Change(int *value) {
 //     *value = 5;
 // }//////////////////////////
+
+
 
 void HookState_Wave(Context *ctx, float dt) {
     int status = ctx->status;
@@ -54,15 +57,27 @@ void HookState_Wave(Context *ctx, float dt) {
     float hookdir = ctx->hookdir;
     float hookspeed = ctx->hookspeed;
 
-    hook.angle += hook.speed * dt * hookdir; // 角度的变化   int hookdir = 1;
+
+
+    if (hookdir == 1) {
+        hook.angle = EaseInSine(ctx->hookwavetime, ctx->hookwaveduration, 0, 180);
+        
+    } // 角度的变化   int hookdir = 1;
+
+    if (hookdir == -1) {
+        hook.angle =180- EaseInSine(ctx->hookwavetime, ctx->hookwaveduration, 0, 180);
+    } // 角度的变化   int hookdir = 1;
+
 
     ctx->hookstart.x = manpos.x + (mansize / 2);
     ctx->hookstart.y = manpos.y + mansize; // 得到老头中心点下面的位置（钩子中的位置）
-    if (hook.angle >= 180) {
-        hookdir = -1;
-    } else if (hook.angle <= 0) {
-        hookdir = 1;
+
+    if (ctx->hookwavetime >= ctx->hookwaveduration) {
+        hookdir =hookdir * -1; // bi表示方向
+        ctx->hookwavetime=0;
+        printf("%f",hookdir);
     } // 钩子在0-180内左右摆动
+    ctx->hookwavetime += dt;
 
     ////////////////////////钩子伸长
     // 角度不变 半径变长

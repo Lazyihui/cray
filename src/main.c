@@ -13,14 +13,11 @@
 #include "Context.h"
 #include "HookController.h"
 
-
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 黄金旷工
 
-
-
 void DrawGame(Context *ctx) {
+
     Rock *arrrock = ctx->arrrock;
     int lastrockindex = ctx->lastrockindex;
     Hook hook = ctx->hook;
@@ -29,19 +26,20 @@ void DrawGame(Context *ctx) {
     int score = ctx->score;
     float time = ctx->time;
 
+    DrawLine(ctx->hookstart.x, ctx->hookstart.y, hook.pos.x, hook.pos.y, GRAY); // 钩子的线
+    Hook_Draw(&hook);                                                           // 钩子
+
     for (int i = 0; i <= lastrockindex; i++) {
         Rock rock = arrrock[i];
         Rock_Draw(&rock);
     } // 随机画石头
 
-    Text_Int(score, 20, 20, 20, RED);
+    // DrawText(gold,10,20,20,YELLOW);
+    Text_Int(score, 80, 20, 20, RED);
     Text_Int((int)time, 400, 10, 20, YELLOW);
-
-    DrawLine(0, 122, 800, 122, GREEN);                                                // 分界线
-    DrawRectangle(manpos.x, manpos.y, mansize, mansize, RED);                         // 老头
-    Hook_Draw(&hook);                                                                 // 钩子
-    DrawLine(ctx->hookstart.x, ctx->hookstart.y, hook.pos.x, hook.pos.y, GRAY); // 钩子的线
-    DrawFPS(50, 50);
+    DrawLine(0, 122, 800, 122, GREEN);                        // 分界线
+    DrawRectangle(manpos.x, manpos.y, mansize, mansize, RED); // 老头
+    // DrawFPS(50, 50);  60FPS
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -53,13 +51,12 @@ int main(void) {
 
     // int a = 3;
     // Change(&a);
-
     // myRock 这种写法多看几遍
     // int rockindex;
     ////////////////////////生成金块
 
     for (int i = 0; i < rockcount; i++) {
-        int rd = get_rand(0, 3);                 // 随机得到0 1 2 这三个数
+        int rd = get_rand(0, ROCKTEMPLATECOUNT); // 随机得到0 1 2 这三个数
         Rock myRock = context.rocktemplates[rd]; // myRock 随机得到三种不同的石头
         int rdx = get_rand(0, 800);              // 随机的位置
         int rdy = get_rand(180, 450);            // 随机的位置
@@ -71,32 +68,40 @@ int main(void) {
         // printf("%d\r\n", rd);
     }
 
-
+    // DrawRectangle(395, 225, 4, 10, BLANK);
 
     SetTargetFPS(60);
+    int gamestatus = 0;
 
     while (!WindowShouldClose()) { /// 一针
         float dt = GetFrameTime();
 
         BeginDrawing();
-        ClearBackground(BLACK);
+        if (gamestatus == 0) {
+            ClearBackground(WHITE);
+            DrawText("please press the space bar to start game", 200, 200, 20, BLACK);
+            // DrawText("请按下空格键开始游戏", 200, 200, 20, BLACK);
 
-        //////////////////time     dt= 1/fps 一秒内的dt和是一秒
-        context.time -= dt;
+            if (IsKeyDown(KEY_SPACE)) {
+                gamestatus = 1;
+            }
+        } else if (gamestatus == 1) {
+            ClearBackground(BLACK);
+            //////////////////time     dt= 1/fps 一秒内的dt和是一秒
+            context.time -= dt;
 
-        // 0 摆动 1 发出 2 勾到收回 3 没勾到
-        HookState_Wave(&context, dt);
-        HookState_Move(&context, dt);
-        HookState_Hook(&context, dt);
-        HookState_Lost(&context, dt);
+            // 0 摆动 1 发出 2 勾到收回 3 没勾到
+            ////////////////////////////////////////////////////////黄金矿工第一关
+            HookState_Wave(&context, dt);
+            HookState_Move(&context, dt);
+            HookState_Hook(&context, dt);
+            HookState_Lost(&context, dt);
+            ////////////////////下一关
 
-        ////////////////////下一关
+            ///////画分数
+            DrawGame(&context);
+        }
 
-        //    controller
-
-        ///////画分数
-
-        DrawGame(&context);
         EndDrawing();
     }
 
