@@ -28,6 +28,9 @@ typedef struct Context {
 
     float time;
     int score;
+
+    /////////////////物理
+    int mouse;
     
 } Context;
 

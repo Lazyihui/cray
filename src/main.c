@@ -12,7 +12,7 @@
 #include "HookEntity.h"
 #include "Context.h"
 #include "HookController.h"
-
+#include "GUI.h"
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 黄金旷工
 
@@ -72,18 +72,48 @@ int main(void) {
 
     SetTargetFPS(60);
     int gamestatus = 0;
-    
 
     while (!WindowShouldClose()) { /// 一针
         float dt = GetFrameTime();
 
         BeginDrawing();
+        // if (gamestatus == 0) {
+        //     ClearBackground(WHITE);
+        //     DrawText("please press the space bar to start game", 200, 200, 20, BLACK);
+        //     // DrawText("请按下空格键开始游戏", 200, 200, 20, BLACK);
+
+        //     if (IsKeyDown(KEY_SPACE)) {
+        //         gamestatus = 1;
+        //     }
+        // } else if (gamestatus == 1) {
+        //     ClearBackground(BLACK);
+        //     //////////////////time     dt= 1/fps 一秒内的dt和是一秒
+        //     context.time -= dt;
+
+        //     // 0 摆动 1 发出 2 勾到收回 3 没勾到
+        //     ////////////////////////////////////////////////////////黄金矿工第一关
+        //     HookState_Wave(&context, dt);
+        //     HookState_Move(&context, dt);
+        //     HookState_Hook(&context, dt);
+        //     HookState_Lost(&context, dt);
+        //     ////////////////////下一关
+
+        //     ///////画分数
+        //     DrawGame(&context);
+        // }
+
         if (gamestatus == 0) {
+
             ClearBackground(WHITE);
-            DrawText("please press the space bar to start game", 200, 200, 20, BLACK);
+
+            bool button =
+                GUI_Button((Vector2){390, 220}, (Vector2){160, 30}, BLACK, "press", (Vector2){390, 220}, 14, YELLOW);
+                Vector2 mouse = GetMousePosition();
+                printf("(%f,%f)\r\n",mouse.x,mouse.y);
+            // DrawText("please press the space bar to start game", 200, 200, 20, BLACK);
             // DrawText("请按下空格键开始游戏", 200, 200, 20, BLACK);
 
-            if (IsKeyDown(KEY_SPACE)) {
+            if (button) {
                 gamestatus = 1;
             }
         } else if (gamestatus == 1) {
