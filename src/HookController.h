@@ -34,9 +34,12 @@ void ContextInit(Context *context) {
     context->hookspeed = 120;
     context->hookwavetime = 0;
     context->hookwaveduration=3;
+    context->hookcycle= 1;
+    context->hookwavesintime = 0;
 
     context->score = 0;
     context->time = 60;
+
 }
 
 // void Change(int *value) {
@@ -57,26 +60,29 @@ void HookState_Wave(Context *ctx, float dt) {
     float hookdir = ctx->hookdir;
     float hookspeed = ctx->hookspeed;
 
+    ctx->hookwavesintime += 1*dt;
 
+    hook.angle = CycleSinAbsSine(ctx->hookwavesintime, ctx->hookcycle, 0, 180);
+    printf("%f",hook.angle);
 
-    if (hookdir == 1) {
-        hook.angle = EaseInSine(ctx->hookwavetime, ctx->hookwaveduration, 0, 180);
+    // if (hookdir == 1) {
+    //     hook.angle = CycleSinAbsSine(ctx->hookwavesintime, ctx->hookcycle, 1, -1);
         
-    } // 角度的变化   int hookdir = 1;
+    // } // 角度的变化   int hookdir = 1;
 
-    if (hookdir == -1) {
-        hook.angle =180- EaseInSine(ctx->hookwavetime, ctx->hookwaveduration, 0, 180);
-    } // 角度的变化   int hookdir = 1;
+    // if (hookdir == -1) {
+    //     hook.angle =180 - CycleSinAbsSine(ctx->hookwavesintime, ctx->hookcycle, 1, -1);
+    // } // 角度的变化   int hookdir = 1;
 
 
     ctx->hookstart.x = manpos.x + (mansize / 2);
     ctx->hookstart.y = manpos.y + mansize; // 得到老头中心点下面的位置（钩子中的位置）
 
-    if (ctx->hookwavetime >= ctx->hookwaveduration) {
-        hookdir =hookdir * -1; // bi表示方向
-        ctx->hookwavetime=0;
-        printf("%f",hookdir);
-    } // 钩子在0-180内左右摆动
+    // if (ctx->hookwavetime >= ctx->hookwaveduration) {
+    //     hookdir =hookdir * -1; // bi表示方向
+    //     // ctx->hookwavetime=0;
+    //     printf("%f",hookdir);
+    // } // 钩子在0-180内左右摆动
     ctx->hookwavetime += dt;
 
     ////////////////////////钩子伸长

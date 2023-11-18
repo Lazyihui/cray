@@ -72,6 +72,7 @@ int main(void) {
 
     SetTargetFPS(60);
     int gamestatus = 0;
+    
 
     while (!WindowShouldClose()) { /// 一针
         float dt = GetFrameTime();

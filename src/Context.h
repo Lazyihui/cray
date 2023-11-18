@@ -19,6 +19,9 @@ typedef struct Context {
     int hookdir; ///////////////////////????????????
     float hookwavetime;
     float hookwaveduration;
+    float hookcycle;
+    float hookwavesintime;
+
 
     Vector2 manpos;
     int mansize; // 因为是一个正方形
