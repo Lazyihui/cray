@@ -28,7 +28,7 @@ float Ease(float time, float duration, float startValue, float endValue) {
 
 
 float CycleSinAbs(float time,float cycle){
-    return fabs(sinf(cycle*time*(PI/2)));
+    return sinf(cycle*time*(PI/2));
 }
 
 float CycleSinAbsSine(float time ,float cycle, float startValue, float endValue){

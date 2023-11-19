@@ -6,7 +6,7 @@
 #include "Ease.h"
 
 void ContextInit(Context *context) {
-//////////////////////////////////////////////////////////////////////////////////////////////////赋值都在这里
+    //////////////////////////////////////////////////////////////////////////////////////////////////赋值都在这里
     for (int i = 0; i < rockcount; i++) {
         context->arrrock[i] = (Rock){0};
     }
@@ -33,20 +33,17 @@ void ContextInit(Context *context) {
     context->status = 0;
     context->hookspeed = 120;
     context->hookwavetime = 0;
-    context->hookwaveduration=3;
-    context->hookcycle= 1;
+    context->hookwaveduration = 3;
+    context->hookcycle = 1;
     context->hookwavesintime = 0;
 
     context->score = 0;
     context->time = 60;
-
 }
 
 // void Change(int *value) {
 //     *value = 5;
 // }//////////////////////////
-
-
 
 void HookState_Wave(Context *ctx, float dt) {
     int status = ctx->status;
@@ -60,20 +57,19 @@ void HookState_Wave(Context *ctx, float dt) {
     float hookdir = ctx->hookdir;
     float hookspeed = ctx->hookspeed;
 
-    ctx->hookwavesintime += 1*dt;
-
+    ctx->hookwavesintime += 1 * dt;
+    printf("%f", ctx->hookwavesintime);
     hook.angle = CycleSinAbsSine(ctx->hookwavesintime, ctx->hookcycle, 0, 180);
-    printf("%f",hook.angle);
+    // printf("%f",hook.angle);
 
     // if (hookdir == 1) {
     //     hook.angle = CycleSinAbsSine(ctx->hookwavesintime, ctx->hookcycle, 1, -1);
-        
+
     // } // 角度的变化   int hookdir = 1;
 
     // if (hookdir == -1) {
     //     hook.angle =180 - CycleSinAbsSine(ctx->hookwavesintime, ctx->hookcycle, 1, -1);
     // } // 角度的变化   int hookdir = 1;
-
 
     ctx->hookstart.x = manpos.x + (mansize / 2);
     ctx->hookstart.y = manpos.y + mansize; // 得到老头中心点下面的位置（钩子中的位置）
@@ -83,9 +79,10 @@ void HookState_Wave(Context *ctx, float dt) {
     //     // ctx->hookwavetime=0;
     //     printf("%f",hookdir);
     // } // 钩子在0-180内左右摆动
-    ctx->hookwavetime += dt;
+    // ctx->hookwavetime += dt;
 
     ////////////////////////钩子伸长
+
     // 角度不变 半径变长
     if (IsKeyPressed(KEY_SPACE)) {
         status = 1;

@@ -71,45 +71,21 @@ int main(void) {
     // DrawRectangle(395, 225, 4, 10, BLANK);
 
     SetTargetFPS(60);
-    int gamestatus = 0;
-
+    int gamestatus = 2;
+    float linetime = 0;
+    float angle =0; 
     while (!WindowShouldClose()) { /// 一针
         float dt = GetFrameTime();
 
         BeginDrawing();
-        // if (gamestatus == 0) {
-        //     ClearBackground(WHITE);
-        //     DrawText("please press the space bar to start game", 200, 200, 20, BLACK);
-        //     // DrawText("请按下空格键开始游戏", 200, 200, 20, BLACK);
-
-        //     if (IsKeyDown(KEY_SPACE)) {
-        //         gamestatus = 1;
-        //     }
-        // } else if (gamestatus == 1) {
-        //     ClearBackground(BLACK);
-        //     //////////////////time     dt= 1/fps 一秒内的dt和是一秒
-        //     context.time -= dt;
-
-        //     // 0 摆动 1 发出 2 勾到收回 3 没勾到
-        //     ////////////////////////////////////////////////////////黄金矿工第一关
-        //     HookState_Wave(&context, dt);
-        //     HookState_Move(&context, dt);
-        //     HookState_Hook(&context, dt);
-        //     HookState_Lost(&context, dt);
-        //     ////////////////////下一关
-
-        //     ///////画分数
-        //     DrawGame(&context);
-        // }
 
         if (gamestatus == 0) {
-
             ClearBackground(WHITE);
 
             bool button =
                 GUI_Button((Vector2){390, 220}, (Vector2){160, 30}, BLACK, "press", (Vector2){390, 220}, 14, YELLOW);
-                Vector2 mouse = GetMousePosition();
-                printf("(%f,%f)\r\n",mouse.x,mouse.y);
+            Vector2 mouse = GetMousePosition();
+            printf("(%f,%f)\r\n", mouse.x, mouse.y);
             // DrawText("please press the space bar to start game", 200, 200, 20, BLACK);
             // DrawText("请按下空格键开始游戏", 200, 200, 20, BLACK);
 
@@ -131,6 +107,16 @@ int main(void) {
 
             ///////画分数
             DrawGame(&context);
+        } else if (gamestatus == 2) {
+            ClearBackground(WHITE);
+
+            angle+=dt*50;
+            if(angle>=360){
+                angle -=360;
+            }
+            // angle = angle%360.0f; ///////////////////////////////取模
+            // Line_rotate(&linetime, dt);
+            Line_rect((Vector2){.x=400,.y=200},Vector2New(50,30),angle);
         }
 
         EndDrawing();

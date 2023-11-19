@@ -3,6 +3,7 @@
 //  ./ 当前目录    ../上一个   ../../再上一个
 #include "../include/raylib.h"
 #include "../include/raymath.h"
+#include "Ease.h"
 #define byte unsigned char
 #define string const char *
 #define rockcount 10
@@ -13,7 +14,6 @@ const int HOOK_STATUS_WAVE = 0;
 const int HOOK_STATUS_MOVE = 1;
 const int HOOK_STATUS_HOOK = 2;
 const int HOOK_STATUS_LOST = 3;
-
 
 Vector2 Vector2New(float x, float y) {
 
@@ -104,8 +104,6 @@ bool IsRectInsideRectR(Rectangle a, Rectangle b) {
                             Vector2New(b.width, b.height));
 }
 
-
-
 // 在半圆里移动    //记笔记
 Vector2 GetOnCirlce(Vector2 pos, float angle, float radius) {
     angle = angle * DEG2RAD;
@@ -128,12 +126,55 @@ float GetHeavyRate(float heavy) {
     return -0.175f * heavy + 5.75f;
 }
 
+void Line_rotate(float *linetime, float dt) {
+    float angle;
+    Vector2 startpos;
+    startpos.x = 450;
+    startpos.y = 200;
+    Vector2 endpos;
+    Vector2 endposdown;
+    Vector2 linesize;
+    linesize.x = 115;
+    linesize.y = 7;
+    *linetime += dt;
 
+    // printf("%f\r\n",*linetime);
 
-// void Text_charwrite(){
-//     // DrawText();
-// }
+    angle = CycleSinAbsSine(*linetime, 1, 0, 360);
+    // printf("%f\r\n",angle);
+    endpos = GetOnCirlce(startpos, angle, 100);
+    endposdown = GetOnCirlce(startpos, angle, 50);
+    // printf("%f\r\n",endpos.x);
+    DrawLine(startpos.x, startpos.y, endpos.x, endpos.y, RED);
+    DrawLine(startpos.x, startpos.y, endpos.x, endpos.y, BLACK);
+}
 
+void Line_rect(Vector2 pos, Vector2 size, float angle) {
+    float x = pos.x;
+    float y = pos.y;
+    float w = size.x;
+    float h = size.y;
 
+    Vector2 lt = pos;
+
+    pos.x = pos.x + w;
+    Vector2 rt = pos;
+    rt = GetOnCirlce(lt, angle, w);
+
+    pos.y = pos.y + h;
+    Vector2 rb = pos;
+    float oldangle = Vector2Angle(lt, rb)*RAD2DEG;
+    rb = GetOnCirlce(lt, oldangle+angle, Vector2Distance(lt, rb));
+
+    pos.x = x;
+    Vector2 lb = pos;
+
+    lb = GetOnCirlce(lt, 90+angle, h);
+
+    DrawLineV(lt, rt, RED);
+    DrawLineV(rt, rb, BLACK);
+    DrawLineV(rb, lb, GRAY);
+    DrawLineV(lb, lt, GREEN);
+}
 
 #endif
