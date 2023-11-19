@@ -104,7 +104,7 @@ bool IsRectInsideRectR(Rectangle a, Rectangle b) {
                             Vector2New(b.width, b.height));
 }
 
-// 在半圆里移动    //记笔记
+// 在圆里移动    //记笔记
 Vector2 GetOnCirlce(Vector2 pos, float angle, float radius) {
     angle = angle * DEG2RAD;
     Vector2 result;
@@ -136,7 +136,7 @@ void Line_rotate(float *linetime, float dt) {
     Vector2 linesize;
     linesize.x = 115;
     linesize.y = 7;
-    *linetime += dt;
+    *linetime += dt;/////////////////////
 
     // printf("%f\r\n",*linetime);
 
@@ -149,7 +149,7 @@ void Line_rotate(float *linetime, float dt) {
     DrawLine(startpos.x, startpos.y, endpos.x, endpos.y, BLACK);
 }
 
-void Line_rect(Vector2 pos, Vector2 size, float angle) {
+void Rotate_LineRect(Vector2 pos, Vector2 size, float angle,Color color) {
     float x = pos.x;
     float y = pos.y;
     float w = size.x;
@@ -168,13 +168,22 @@ void Line_rect(Vector2 pos, Vector2 size, float angle) {
 
     pos.x = x;
     Vector2 lb = pos;
-
     lb = GetOnCirlce(lt, 90+angle, h);
 
-    DrawLineV(lt, rt, RED);
-    DrawLineV(rt, rb, BLACK);
-    DrawLineV(rb, lb, GRAY);
-    DrawLineV(lb, lt, GREEN);
+    DrawLineV(lt, rt, color);
+    DrawLineV(rt, rb, color);
+    DrawLineV(rb, lb, color);
+    DrawLineV(lb, lt, color);
 }
+
+void Rotate_point(Vector2 pos,float radius,Color color,float angle , float rotateradius ){
+
+    DrawCircle(pos.x,pos.y,5,BLACK);
+
+    pos = GetOnCirlce(pos,angle,rotateradius);
+    DrawCircle(pos.x,pos.y,radius,color);
+}
+
+
 
 #endif

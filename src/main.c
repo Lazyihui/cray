@@ -68,12 +68,10 @@ int main(void) {
         // printf("%d\r\n", rd);
     }
 
-    // DrawRectangle(395, 225, 4, 10, BLANK);
-
     SetTargetFPS(60);
-    int gamestatus = 2;
+    int gamestatus = 3;
     float linetime = 0;
-    float angle =0; 
+    float angle = 0;
     while (!WindowShouldClose()) { /// 一针
         float dt = GetFrameTime();
 
@@ -97,7 +95,6 @@ int main(void) {
             //////////////////time     dt= 1/fps 一秒内的dt和是一秒
             context.time -= dt;
 
-            // 0 摆动 1 发出 2 勾到收回 3 没勾到
             ////////////////////////////////////////////////////////黄金矿工第一关
             HookState_Wave(&context, dt);
             HookState_Move(&context, dt);
@@ -105,18 +102,26 @@ int main(void) {
             HookState_Lost(&context, dt);
             ////////////////////下一关
 
-            ///////画分数
             DrawGame(&context);
         } else if (gamestatus == 2) {
+            //////////////////////////////////////////////画矩形旋转
             ClearBackground(WHITE);
 
-            angle+=dt*50;
-            if(angle>=360){
-                angle -=360;
+            angle += dt * 50; ////////////////////////////////////////////////////////////////////////////////////////
+            if (angle >= 360) {
+                angle -= 360;
             }
-            // angle = angle%360.0f; ///////////////////////////////取模
             // Line_rotate(&linetime, dt);
-            Line_rect((Vector2){.x=400,.y=200},Vector2New(50,30),angle);
+            Rotate_LineRect((Vector2){.x = 400, .y = 200}, Vector2New(50, 30), angle, RED);
+        } else if (gamestatus == 3) {
+                ClearBackground(WHITE);
+
+                angle += dt*200;
+                if (angle >= 360) {
+                angle -= 360;
+            }
+                Rotate_point(Vector2New(400,200),5,RED,angle,50);
+
         }
 
         EndDrawing();
