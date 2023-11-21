@@ -114,7 +114,9 @@ void HookState_Move(Context *ctx, float dt) {
         Rock rock = ctx->arrrock[i];
         bool isintersect = IsCirlceInsideCircle(hook.radius, rock.radius, hook.pos, rock.pos);
         if (isintersect) {
+            
             ctx->rockindex = i;        // 存
+
             status = HOOK_STATUS_HOOK; // 勾到
 
             break;

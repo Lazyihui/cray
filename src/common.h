@@ -113,6 +113,32 @@ Vector2 GetOnCirlce(Vector2 pos, float angle, float radius) {
     return Vector2Add(result, pos);
 }
 
+// Vector2 GetOnRect(Vector2 pos, Vector2 startpos, float width, float hight, float dt) {
+
+//     if (pos.x <= startpos.x + width && pos.y == startpos.y) {
+//         for (float i = 0; i < width; i++) {
+//             pos.x += dt;
+//         }
+//     }
+//     if (pos.x > startpos.x + width && pos.x == startpos.x + width) {
+//         for (float i = 0; i < hight; i++) {
+//             pos.y += dt;
+//         }
+//     }
+//     if (pos.x <= startpos.x && pos.y == startpos.y + hight) {
+//         for (float i = 0; i < width; i++) {
+//             pos.x -= dt;
+//         }
+//     }
+//     if (pos.y <= startpos.y + hight && pos.x == startpos.x) {
+//         for (float i = 0; i < width; i++) {
+//             pos.y -= dt;
+//         }
+//     }
+
+//     Vector2 pos;
+// }
+
 void Text_Float(float b, int x, int y, int size) {
     const char *a = TextFormat("%f", b);
     DrawText(a, x, y, size, YELLOW);
@@ -136,7 +162,7 @@ void Line_rotate(float *linetime, float dt) {
     Vector2 linesize;
     linesize.x = 115;
     linesize.y = 7;
-    *linetime += dt;/////////////////////
+    *linetime += dt; /////////////////////
 
     // printf("%f\r\n",*linetime);
 
@@ -149,7 +175,7 @@ void Line_rotate(float *linetime, float dt) {
     DrawLine(startpos.x, startpos.y, endpos.x, endpos.y, BLACK);
 }
 
-void Rotate_LineRect(Vector2 pos, Vector2 size, float angle,Color color) {
+void Rotate_LineRect(Vector2 pos, Vector2 size, float angle, Color color) {
     float x = pos.x;
     float y = pos.y;
     float w = size.x;
@@ -163,27 +189,65 @@ void Rotate_LineRect(Vector2 pos, Vector2 size, float angle,Color color) {
 
     pos.y = pos.y + h;
     Vector2 rb = pos;
-    float oldangle = Vector2Angle(lt, rb)*RAD2DEG;
-    rb = GetOnCirlce(lt, oldangle+angle, Vector2Distance(lt, rb));
+    float oldangle = Vector2Angle(lt, rb) * RAD2DEG;
+    rb = GetOnCirlce(lt, oldangle + angle, Vector2Distance(lt, rb));
 
     pos.x = x;
     Vector2 lb = pos;
-    lb = GetOnCirlce(lt, 90+angle, h);
+    lb = GetOnCirlce(lt, 90 + angle, h);
 
     DrawLineV(lt, rt, color);
     DrawLineV(rt, rb, color);
     DrawLineV(rb, lb, color);
     DrawLineV(lb, lt, color);
 }
+Vector2 GetOnRect(Vector2 pos, Vector2 startpos, float width, float hight, float dt) {
 
-void Rotate_point(Vector2 pos,float radius,Color color,float angle , float rotateradius ){
+    if (pos.x < startpos.x + width && pos.y == startpos.y) {
+        pos.x += dt * 100;
 
-    DrawCircle(pos.x,pos.y,5,BLACK);
+        if (pos.x > startpos.x + width) {
+            pos.x = startpos.x + width;
+        }
 
-    pos = GetOnCirlce(pos,angle,rotateradius);
-    DrawCircle(pos.x,pos.y,radius,color);
+    } else if (pos.x == startpos.x + width && pos.y < startpos.y + hight) {
+        pos.y += dt * 100;
+
+        if (pos.y > startpos.y + hight) {
+            pos.y = startpos.y + hight;
+        }
+
+    } else if (pos.x > startpos.x && pos.y == startpos.y + hight) {
+        pos.x -= dt * 100;
+        if (pos.x < startpos.x) {
+            pos.x = startpos.x;
+        }
+
+    } else if (pos.y > startpos.y && pos.x == startpos.x) {
+        pos.y -= dt * 100;
+        if (pos.y < startpos.y) {
+            pos.y = startpos.y;
+        }
+    }
+
+    return pos;
 }
 
+void Rotate_point(Vector2 pos, float radius, Color color, float angle, float rotateradius) {
 
+    DrawCircle(pos.x, pos.y, 5, BLACK);
+
+    pos = GetOnCirlce(pos, angle, rotateradius);
+    DrawCircle(pos.x, pos.y, radius, color);
+}
+
+void  Run_Rect(Vector2 *pos, Vector2 startpos, float width, float hight, float dt) {
+
+    *pos = GetOnRect(*pos, startpos, width, hight, dt);
+    DrawCircle(pos->x, pos->y, 5, RED);
+    
+}
+// &传入地址 找到他的地址
+// *指针 
 
 #endif

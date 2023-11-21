@@ -69,9 +69,14 @@ int main(void) {
     }
 
     SetTargetFPS(60);
-    int gamestatus = 3;
+    int gamestatus = 5;
     float linetime = 0;
     float angle = 0;
+    Vector2 posOnRect;
+
+    posOnRect.x=400;
+    posOnRect.y=200;
+
     while (!WindowShouldClose()) { /// 一针
         float dt = GetFrameTime();
 
@@ -122,7 +127,12 @@ int main(void) {
             }
                 Rotate_point(Vector2New(400,200),5,RED,angle,50);
 
-        }
+        }else if(gamestatus == 4){
+                ClearBackground(WHITE);
+
+                Run_Rect(&posOnRect,Vector2New(400,200),50,50,dt);
+
+        }else if(gamestatus == 5){}
 
         EndDrawing();
     }
