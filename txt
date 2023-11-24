@@ -3,3 +3,39 @@
 4.钩子左右动
 5.钩子怎么样向下运动
 6.钩子结构体     大小 位置 形状 速度  √
+
+
+
+
+
+
+生成地鼠   在固定时间内地鼠会消失  在固定时间内点击地鼠地鼠会变成三角形（晕倒）
+
+1.地鼠的结构体  
+    a.
+2.地鼠的生成
+    a.在固定位置随机生成
+3.地鼠的消失（晕倒）
+4.锤子的结构体
+5.锤子的坐标等于鼠标坐标
+6.锤子和地鼠的交叉检测
+7.玩家结构体
+8.关卡结构体
+
+
+
+
+gcc .\src\main.c -I .\include\ -c -o .\build\main.o
+ 
+-I 是包含某个目录
+-c 是只编译出 .o文件
+-o 后面是输出到那个文件里output
+.\src\main.c -I .\include\ -c  一起编译成点.o
+
+gcc .\build\main.o  .\lib\raylib.dll -o .\bin\main.exe
+
+.\build\main.o  .\lib\raylib.dll -o 把这些链接在一起 编译成main.o 
+
+copy .\lib\raylib.dll .\bin\raylib.dll 
+
+bin\main.exe
